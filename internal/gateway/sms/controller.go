@@ -5,18 +5,21 @@ import "iw/v2/internal"
 func Start() {
 	var op = internal.BindWallet
 
+	var cmd internal.Receiver
 	switch op {
 	case internal.BindWallet:
-		gw.OnBindWallet()
+		cmd = bindWallet
 	case internal.CheckBalance:
-		gw.OnCheckBalance()
+		cmd = checkBalance
 	case internal.QueryGateway:
-		gw.OnQueryGateway()
+		cmd = queryGateway
 	case internal.QueryTransaction:
-		gw.OnQueryTransaction()
+		cmd = queryTransaction
 	case internal.Transfer:
-		gw.OnTransfer()
+		cmd = transfer
 	default:
 		panic("unknown command")
 	}
+
+	cmd.Execute()
 }

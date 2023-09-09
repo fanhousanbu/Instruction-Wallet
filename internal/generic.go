@@ -8,8 +8,14 @@ const (
 	QueryTransaction = "qt" // 查询最近10条交易
 )
 
-type Command interface {
+// Receiver 接收指令
+type Receiver interface {
 	Execute()
+}
+
+// Response 响应指令
+type Response interface {
+	Send()
 }
 
 // Terminal represent 终端对象
@@ -20,4 +26,5 @@ type Terminal interface {
 	OnTransfer()         // 转账
 	OnCheckBalance()     // 查询余额
 	OnQueryTransaction() // 查询交易
+	SendMessage(*string) // 发送消息
 }
