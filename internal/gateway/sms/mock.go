@@ -1,7 +1,7 @@
 package sms
 
 type mockGateway struct {
-	sender string
+	from string
 }
 
 // GenPhoneNumber 模拟生成手机号
