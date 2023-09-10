@@ -1,7 +1,7 @@
 package internal
 
 const (
-	QueryGateway     = "qg" // 查询可用网关地址
+	QueryGateway     = "q"  // 查询可用网关地址
 	BindWallet       = "0"  // 绑定钱包指令
 	Transfer         = "1"  // 转账
 	CheckBalance     = "cb" // 查询余额

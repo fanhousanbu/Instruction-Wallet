@@ -8,5 +8,9 @@ type QueryGatewayCommand struct {
 }
 
 func (c *QueryGatewayCommand) Execute() {
+	c.Terminal.OnQueryGateway()
+}
 
+// Send 发送短信
+func (c *QueryGatewayCommand) Send() {
 }
