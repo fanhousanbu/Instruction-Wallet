@@ -22,7 +22,7 @@ func (sms *Sms) OnQueryGateway() {
 	}
 
 	var gatewaysList strings.Builder
-	for ; sms.nextGateway < len(sms.gateways) || sms.nextGateway < MaxGatewaysList; sms.nextGateway++ {
+	for ; sms.nextGateway < len(sms.gateways) && sms.nextGateway < MaxGatewaysList; sms.nextGateway++ {
 		gatewaysList.WriteString(sms.gateways[sms.nextGateway] + " ")
 	}
 	if gatewaysList.Len() > 0 {

@@ -18,13 +18,6 @@ func (sms *Sms) getSender() string {
 	return sms.mocker.from
 }
 
-func (sms *Sms) OnCheckBalance() {
-
-}
-func (sms *Sms) OnQueryTransaction() {
-
-}
-
 func (sms *Sms) SendMessage(to, msg *string) {
 
 }

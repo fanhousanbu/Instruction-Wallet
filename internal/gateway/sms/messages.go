@@ -6,4 +6,5 @@ const (
 	MobileExists                = "your mobile is already assigned with a wallet address: %s"
 	MobileBinding               = "your mobile get a binding wallet address: %s"
 	NotFound                    = "not found any gateways" // 没有找到可用网关
+	NoWallet                    = "your mobile doesn't bind any wallet yet"
 )
