@@ -24,13 +24,13 @@ func Start() {
 	switch op {
 	case internal.BindWallet:
 		cmd = &BindWalletCommand{Terminal: gw}
-	case internal.CheckBalance:
-		cmd = &CheckBalanceCommand{Terminal: gw}
 	case internal.QueryGateway:
 		cmd = &QueryGatewayCommand{Terminal: gw}
 	case internal.QueryTransaction:
 		cmd = &QueryTransactionCommand{Terminal: gw}
 	case internal.Transfer:
+		cmd = &TransferCommand{Terminal: gw}
+	case internal.SendMyWalletAddress:
 		cmd = &TransferCommand{Terminal: gw}
 	}
 
