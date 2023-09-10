@@ -13,18 +13,13 @@ type Receiver interface {
 	Execute()
 }
 
-// Response 响应指令
-type Response interface {
-	Send()
-}
-
 // Terminal represent 终端对象
 // 比如智能手机、PC、传统非智能手机等
 type Terminal interface {
-	OnQueryGateway()     // 查询网关
-	OnBindWallet()       // 绑定钱包
-	OnTransfer()         // 转账
-	OnCheckBalance()     // 查询余额
-	OnQueryTransaction() // 查询交易
-	SendMessage(*string) // 发送消息
+	OnQueryGateway()                        // 查询网关
+	OnBindWallet()                          // 绑定钱包
+	OnTransfer(dst *string, balance string) // 转账, dst: 目标地址，balance：转账金额
+	OnCheckBalance()                        // 查询余额
+	OnQueryTransaction()                    // 查询交易
+	SendMessage(*string, *string)           // 发送消息
 }

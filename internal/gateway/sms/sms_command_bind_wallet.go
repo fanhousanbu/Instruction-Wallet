@@ -1,6 +1,10 @@
 package sms
 
-import "iw/v2/internal"
+import (
+	"fmt"
+	"iw/v2/internal"
+	"iw/v2/internal/wallet"
+)
 
 // BindWalletCommand 绑定钱包命令
 type BindWalletCommand struct {
@@ -13,7 +17,21 @@ func (c *BindWalletCommand) Execute() {
 	c.Terminal.OnBindWallet()
 }
 
-// Send 发送短信
-func (c *BindWalletCommand) Send() {
-	c.Terminal.SendMessage(&c.Address[0])
+func (sms *Sms) OnBindWallet() {
+	phoneNumber := sms.getSender()
+
+	msg := SuccessfulAndWaitToConfirm
+	sms.SendMessage(&phoneNumber, &msg)
+
+	addr, sign, exists := wallet.FindAddress(&phoneNumber)
+	sms.addr = addr
+	sms.sign = sign
+
+	if exists {
+		msg = fmt.Sprintf(MobileExists, *sms.addr)
+		sms.SendMessage(&phoneNumber, &msg)
+	} else {
+		msg = fmt.Sprintf(MobileBinding, *sms.addr)
+		sms.SendMessage(&phoneNumber, sms.addr)
+	}
 }
