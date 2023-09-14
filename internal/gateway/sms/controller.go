@@ -8,8 +8,11 @@ import (
 func Start() {
 
 	// TODO: 通过设备获取上下文
-	gw := &Sms{}
-	var op = internal.BindWallet
+	msg := "0"
+	gw := &Sms{
+		rawMessage: &msg,
+	}
+	var op = gw.GetInstruction()
 
 	defer func() {
 		// 异常统一处理
@@ -22,15 +25,15 @@ func Start() {
 	var cmd internal.Receiver
 
 	switch op {
-	case internal.BindWallet:
+	case BindWallet:
 		cmd = &BindWalletCommand{Terminal: gw}
-	case internal.QueryGateway:
+	case QueryGateway:
 		cmd = &QueryGatewayCommand{Terminal: gw}
-	case internal.QueryTransaction:
+	case QueryTransaction:
 		cmd = &QueryTransactionCommand{Terminal: gw}
-	case internal.Transfer:
+	case Transfer:
 		cmd = &TransferCommand{Terminal: gw}
-	case internal.SendMyWalletAddress:
+	case SendMyWalletAddress:
 		cmd = &TransferCommand{Terminal: gw}
 	}
 
