@@ -1,0 +1,141 @@
+package main
+
+import (
+	"database/sql"
+	"fmt"
+	_ "github.com/mattn/go-sqlite3"
+	"log"
+	"math"
+	"os/exec"
+	"os/user"
+	"strings"
+	"time"
+)
+
+var ch chan *Msg
+
+func main() {
+	var last int
+	ch = make(chan *Msg)
+	go procMsg()
+	for {
+		if m, ok := readLatestMessage(last); ok {
+			for i := 0; i < len(m); i++ {
+				last = int(math.Max(float64(last), float64(m[i].rowId)))
+				ch <- &m[i]
+			}
+		}
+		time.Sleep(5 * time.Second)
+	}
+}
+
+func procMsg() {
+	for m := range ch {
+		if strings.EqualFold("test", *m.content) {
+			// 创建 AppleScript 命令
+			script := fmt.Sprintf(`
+        tell application "Messages"
+			set myid to 1st account whose service type = iMessage
+			set theBuddy to participant "%s" of myid
+			repeat with i from 1 to 1
+				send "%s" to theBuddy
+			end repeat
+		end tell
+    `, *m.sender, "收到"+*m.content)
+
+			// 执行 AppleScript
+			cmd := exec.Command("osascript", "-e", script)
+			if err := cmd.Run(); err != nil {
+				log.Println(err)
+			}
+		}
+	}
+
+}
+
+type Msg struct {
+	content *string
+	sender  *string
+	rowId   int
+}
+
+// readLatestMessage 读取最新消息
+func readLatestMessage(lastId int) ([]Msg, bool) {
+
+	usr, err := user.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	connectionString := usr.HomeDir + "/Library/Messages/chat.db"
+	database, err := sql.Open("sqlite3", connectionString)
+	defer func(database *sql.DB) {
+		err := database.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(database)
+	if err != nil {
+		log.Fatal("Connection Failed ", err)
+	}
+	defer func(database *sql.DB) {
+		err := database.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(database)
+
+	database.SetMaxOpenConns(1)
+
+	where := ""
+	if lastId > 0 {
+		where = fmt.Sprintf("AND m.ROWID > %d", lastId)
+	}
+
+	sqlStr := fmt.Sprintf(`
+	select m.ROWID as id, c.chat_identifier as sender, c.service_name as ch, m.text as msg
+		from message m
+				 inner join chat_message_join r on r.message_id = m.ROWID
+				 inner join chat c on c.ROWID = r.chat_id
+		where m.text is not null %s
+		order by m.ROWID desc
+        limit 10;
+        `, where)
+
+	rows, qerr := database.Query(sqlStr)
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(rows)
+
+	if qerr != nil {
+		log.Fatal("Query Failed ", qerr)
+	}
+
+	all := make([]Msg, 0)
+	for rows.Next() {
+		var id int
+		var sender string
+		var ch string
+		var msg string
+		err := rows.Scan(
+			&id,
+			&sender,
+			&ch,
+			&msg,
+		)
+		if err != nil {
+			return nil, false
+		}
+
+		all = append(all, Msg{
+			content: &msg,
+			sender:  &sender,
+			rowId:   id,
+		})
+	}
+
+	return all, len(all) > 0
+}
