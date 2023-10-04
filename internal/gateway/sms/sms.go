@@ -1,6 +1,9 @@
 package sms
 
-import "strings"
+import (
+	"regexp"
+	"strings"
+)
 
 // MaxGatewaysList 最多一次获取的网关数量
 const MaxGatewaysList int = 3
@@ -34,17 +37,17 @@ func (sms *Sms) GetInstruction() string {
 		return BindWallet
 	}
 
-	if strings.EqualFold(*sms.rawMessage, Transfer) {
-		return Transfer
-	}
-
 	if strings.EqualFold(*sms.rawMessage, SendMyWalletAddress) {
 		return SendMyWalletAddress
+	}
+
+	re := regexp.MustCompile(`^1 [0-9]{3,15}$`)
+	if match := re.MatchString(*sms.rawMessage); match {
+		return Transfer
 	}
 
 	return Unknown
 }
 
-func (sms *Sms) SendMessage(to, msg *string) {
-
+func (sms *Sms) Reply(msg *string) {
 }

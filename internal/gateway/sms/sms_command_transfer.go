@@ -23,12 +23,12 @@ func (sms *Sms) OnTransfer(dst *string, balance string) {
 
 	if ok {
 		msg := SuccessfulAndWaitToConfirm
-		sms.SendMessage(&from, &msg)
+		sms.Reply(&msg)
 	} else {
 		var e *InsufficientBalanceError
 		if errors.Is(err, e) {
 			msg := err.Error()
-			sms.SendMessage(&from, &msg)
+			sms.Reply(&msg)
 		} else {
 			panic(err) // 抛出异常，由外部统一处理
 		}

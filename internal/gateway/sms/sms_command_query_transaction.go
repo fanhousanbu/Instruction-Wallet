@@ -22,7 +22,7 @@ func (sms *Sms) OnQueryTransaction() {
 	if exists {
 		if balance, transactions, err := wallet.QueryTransactions(addr); err != nil {
 			msg := err.Error()
-			sms.SendMessage(&phoneNumber, &msg)
+			sms.Reply(&msg)
 		} else {
 			msg := &strings.Builder{}
 			msg.WriteString(balance + " ")
@@ -30,10 +30,10 @@ func (sms *Sms) OnQueryTransaction() {
 				msg.WriteString(transactions[i] + " ")
 			}
 			s := msg.String()
-			sms.SendMessage(&phoneNumber, &s)
+			sms.Reply(&s)
 		}
 	} else {
 		msg := NoWallet
-		sms.SendMessage(&phoneNumber, &msg)
+		sms.Reply(&msg)
 	}
 }

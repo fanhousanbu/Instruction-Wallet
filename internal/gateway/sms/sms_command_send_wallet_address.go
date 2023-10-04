@@ -11,18 +11,18 @@ type SendWalletAddressCommand struct {
 }
 
 func (c *SendWalletAddressCommand) Execute() {
-	c.Terminal.OnSendWalletAddressCommand(c.dstWalletAddress)
+	c.Terminal.OnSendWalletAddress(c.dstWalletAddress)
 }
 
-func (sms *Sms) OnSendWalletAddressCommand(dst *string) {
+func (sms *Sms) OnSendWalletAddress(dst *string) {
 	from := sms.getSender()
 
 	addr, _, exists := wallet.FindAddress(&from)
 
 	if exists {
-		sms.SendMessage(dst, addr)
+		sms.Reply(addr)
 	} else {
 		msg := NoWallet
-		sms.SendMessage(&from, &msg)
+		sms.Reply(&msg)
 	}
 }

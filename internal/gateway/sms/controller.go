@@ -17,9 +17,8 @@ func Start() {
 	defer func() {
 		// 异常统一处理
 		recover()
-		to := gw.getSender()
 		msg := fmt.Sprintf(NetworkErrorAndTryAgainLate, "3 minutes")
-		gw.SendMessage(&to, &msg)
+		gw.Reply(&msg)
 	}()
 
 	var cmd internal.Receiver

@@ -15,8 +15,6 @@ func (c *QueryGatewayCommand) Execute() {
 }
 
 func (sms *Sms) OnQueryGateway() {
-	phoneNumber := sms.getSender()
-
 	if sms.nextGateway >= len(sms.gateways) {
 		sms.nextGateway = 0
 	}
@@ -27,9 +25,9 @@ func (sms *Sms) OnQueryGateway() {
 	}
 	if gatewaysList.Len() > 0 {
 		msg := gatewaysList.String()
-		sms.SendMessage(&phoneNumber, &msg)
+		sms.Reply(&msg)
 	} else {
 		msg := NotFound
-		sms.SendMessage(&phoneNumber, &msg)
+		sms.Reply(&msg)
 	}
 }

@@ -21,7 +21,7 @@ func (sms *Sms) OnBindWallet() {
 	phoneNumber := sms.getSender()
 
 	msg := SuccessfulAndWaitToConfirm
-	sms.SendMessage(&phoneNumber, &msg)
+	sms.Reply(&msg)
 
 	addr, sign, exists := wallet.FindAddress(&phoneNumber)
 	sms.addr = addr
@@ -29,9 +29,9 @@ func (sms *Sms) OnBindWallet() {
 
 	if exists {
 		msg = fmt.Sprintf(MobileExists, *sms.addr)
-		sms.SendMessage(&phoneNumber, &msg)
+		sms.Reply(&msg)
 	} else {
 		msg = fmt.Sprintf(MobileBinding, *sms.addr)
-		sms.SendMessage(&phoneNumber, sms.addr)
+		sms.Reply(sms.addr)
 	}
 }
