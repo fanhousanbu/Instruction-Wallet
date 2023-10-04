@@ -1,28 +1,23 @@
-package sms
+package instructions
 
 import (
 	"iw/v2/internal"
+	"iw/v2/internal/instructions/generic"
 	"iw/v2/internal/wallet"
 	"strings"
 )
 
-type QueryTransactionCommand struct {
-	Terminal internal.Terminal
+type QueryTransaction struct {
+	generic.BaseProcessor
 }
 
-func (c *QueryTransactionCommand) Execute() {
-	c.Terminal.OnQueryTransaction()
-}
-
-func (sms *Sms) OnQueryTransaction() {
-	phoneNumber := sms.getSender()
-
-	addr, _, exists := wallet.FindAddress(&phoneNumber)
+func (c *QueryTransaction) Execute() {
+	addr, _, exists := wallet.FindAddressByToken(c.Token)
 
 	if exists {
 		if balance, transactions, err := wallet.QueryTransactions(addr); err != nil {
 			msg := err.Error()
-			sms.Reply(&msg)
+			c.Terminal.Reply(&msg)
 		} else {
 			msg := &strings.Builder{}
 			msg.WriteString(balance + " ")
@@ -30,10 +25,10 @@ func (sms *Sms) OnQueryTransaction() {
 				msg.WriteString(transactions[i] + " ")
 			}
 			s := msg.String()
-			sms.Reply(&s)
+			c.Terminal.Reply(&s)
 		}
 	} else {
-		msg := NoWallet
-		sms.Reply(&msg)
+		msg := internal.NoWallet
+		c.Terminal.Reply(&msg)
 	}
 }

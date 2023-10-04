@@ -1,4 +1,4 @@
-package sms
+package errors
 
 // InsufficientBalanceError 余额不足
 type InsufficientBalanceError struct {

@@ -1,7 +1,7 @@
 package wallet
 
-// FindAddress 通过手机号获取钱包地址
-func FindAddress(phone *string) (address, sign *string, exists bool) {
+// FindAddressByToken 通过手机号获取钱包地址
+func FindAddressByToken(token *string) (address, sign *string, exists bool) {
 	// TODO: 通过zkp方式获取钱包地址及签名
 	address = nil
 	sign = nil
