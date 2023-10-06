@@ -12,7 +12,7 @@ type QueryTransaction struct {
 }
 
 func (c *QueryTransaction) Execute() {
-	addr, _, exists := wallet.FindAddressByToken(c.Token)
+	addr, _, exists := wallet.FindAddressByToken(c.GetToken())
 
 	if exists {
 		if balance, transactions, err := wallet.QueryTransactions(addr); err != nil {

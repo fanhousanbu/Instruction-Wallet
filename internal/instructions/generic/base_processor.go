@@ -1,17 +1,22 @@
 package generic
 
-import "iw/v2/internal/adapters"
+import (
+	"iw/v2/internal/adapters"
+	"iw/v2/internal/instructions/encoder"
+)
 
 type BaseProcessor struct {
-	RawId    *string
-	Token    *string
-	Terminal adapters.Terminal
+	RawId        *string
+	token        *string
+	Terminal     adapters.Terminal
+	TokenEncoder encoder.HashEncode
 }
 
 func (p *BaseProcessor) GetToken() *string {
-	if p.Token == nil {
-		// TODO: poseidon hash
-		*p.Token = "*" + *p.RawId
+	if p.token == nil {
+		if t, err := p.TokenEncoder.Encode([]byte(*p.RawId)); err == nil {
+			p.token = t
+		}
 	}
-	return p.Token
+	return p.token
 }

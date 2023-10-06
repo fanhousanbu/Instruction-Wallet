@@ -18,7 +18,7 @@ func (c *BindWalletCommand) Execute() {
 	msg := internal.SuccessfulAndWaitToConfirm
 	c.Terminal.Reply(&msg)
 
-	addr, _, exists := wallet.FindAddressByToken(c.Token)
+	addr, _, exists := wallet.FindAddressByToken(c.GetToken())
 
 	if exists {
 		msg = fmt.Sprintf(internal.MobileExists, *addr)

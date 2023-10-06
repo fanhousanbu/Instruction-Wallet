@@ -15,7 +15,7 @@ type Transfer struct {
 }
 
 func (c *Transfer) Execute() {
-	ok, err := wallet.TransferByToken(c.Token, c.CounterPartyToken, c.Balance)
+	ok, err := wallet.TransferByToken(c.GetToken(), c.CounterPartyToken, c.Balance)
 
 	if ok {
 		msg := internal.SuccessfulAndWaitToConfirm

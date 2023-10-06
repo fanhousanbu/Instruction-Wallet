@@ -11,7 +11,7 @@ type SendWalletAddress struct {
 }
 
 func (c *SendWalletAddress) Execute() {
-	addr, _, exists := wallet.FindAddressByToken(c.Token)
+	addr, _, exists := wallet.FindAddressByToken(c.GetToken())
 
 	if exists {
 		c.Terminal.Reply(addr)
