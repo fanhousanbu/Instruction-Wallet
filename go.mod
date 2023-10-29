@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/ethereum/go-ethereum v1.13.4
 	github.com/iden3/go-iden3-crypto v0.0.15
+	github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07
 	gorm.io/driver/sqlite v1.5.4
 	gorm.io/gorm v1.25.5
 )

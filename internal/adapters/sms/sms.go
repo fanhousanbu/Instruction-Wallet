@@ -16,7 +16,7 @@ type Adapter struct {
 
 // GetProcessor 根据短信内容获取指令处理器
 func (sms *Adapter) GetProcessor() (generic.Processor, error) {
-	var encoder encoder2.HashEncode = &encoder2.PoseidonHash{Raw: []byte(*sms.origin)}
+	var encoder encoder2.HashEncode = &encoder2.PoseidonHash{}
 
 	if strings.EqualFold(*sms.message, QueryTransaction) {
 		return &instructions.QueryTransaction{
