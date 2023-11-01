@@ -2,13 +2,17 @@ package sms
 
 import (
 	"fmt"
+	"github.com/tarm/serial"
 	"iw/v2/internal"
+	"iw/v2/internal/infra"
 )
 
-func Start(msg *string) {
+// received 收到短信
+func received(msg []byte) {
 
+	m := string(msg)
 	gw := &Adapter{
-		message: msg,
+		message: &m,
 	}
 
 	defer func() {
@@ -23,4 +27,10 @@ func Start(msg *string) {
 	} else {
 		op.Execute()
 	}
+}
+
+func Init(config *serial.Config) error {
+	conn := infra.SmsGatewayConnector{}
+
+	return conn.Listen(config.Name, config.Baud, received)
 }
